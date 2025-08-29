@@ -1,0 +1,156 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        -128
+      ],
+      "id": "9f93f0b4-4ad4-42a4-946a-3a90125c9606",
+      "name": "When chat message received",
+      "webhookId": "61f77456-ffab-4ff4-a55d-1da0bac0ba21"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful assistant\nThe current date is: {{ $now }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        -128
+      ],
+      "id": "d9ce13c9-f626-4950-b624-98c33e713f1c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -352,
+        80
+      ],
+      "id": "c688b70f-31aa-4bf3-a8be-ae9f0ecc63d2",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BXwHkmfA72U6gAGC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        80
+      ],
+      "id": "1f15dda8-0228-4b7d-8cc1-8b89db74789a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "rme27515@email.vccs.edu",
+          "mode": "list",
+          "cachedResultName": "rme27515@email.vccs.edu"
+        },
+        "start": "={{ $fromAI(\"startTime\", \"This is the start time of the event\" )}}",
+        "end": "={{$fromAI(\"endTime\", \"This is the end time of the event\")}}",
+        "additionalFields": {
+          "summary": "={{$fromAI(\"Summary\", \"This is the summary/title of the event\")}}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        80
+      ],
+      "id": "95db7eb8-c845-4175-8e33-6c5613fb58bd",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QK7KwjUJi7gM2uYZ",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b310020e-f635-42f7-908f-48b5af51b0aa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b073167dbc6ba6d1c4d41f762907f9732fbad351b7655f1051825fa68d12f161"
+  },
+  "id": "bKNS2BRAlKduKk2S",
+  "tags": []
+}
